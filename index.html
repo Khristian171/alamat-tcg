@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alamat TCG - Set 01 Prototype</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.35 system-ui,sans-serif;color:#f6ead6;transition:background .7s;min-height:100vh}
+body.day{background:linear-gradient(#6a4416,#1f130a)}body.night{background:linear-gradient(#17143f,#0a0818)}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 14px;background:#0006;flex-wrap:wrap}
+h1{margin:0;font-size:18px;letter-spacing:2px;color:#e0a93b}h1 small{font-size:11px;color:#c9b89c;letter-spacing:0}
+#tm{text-align:center;font-weight:600}#tm small{font-weight:400;color:#d8c9ae}
+button{background:#e0a93b;color:#2a1608;border:0;border-radius:6px;padding:7px 12px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+main{max-width:1100px;margin:0 auto;padding:8px 10px 20px}
+.side{background:#0004;border:1px solid #e0a93b44;border-radius:10px;padding:8px;margin:6px 0}
+.bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.k{padding:4px 10px;border-radius:8px;background:#7a2e1d;cursor:pointer;border:2px solid transparent}
+.k.tgt{border-color:#ff6a4d;animation:p 1s infinite}.k.sel{border-color:#fff}
+.pip{display:inline-block;width:10px;height:14px;background:#e0a93b;margin-right:2px;border-radius:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
+.card{position:relative;width:132px;min-height:172px;padding:6px 6px 26px;border-radius:9px;background:#f3e2bd;color:#2a1608;border:3px solid #b87a1d;cursor:pointer;font-size:11px}
+.card.O{background:#e4d6f0}.card.A{background:#d8ecd6}
+.card .cost{position:absolute;left:-8px;top:-8px;width:26px;height:26px;border-radius:50%;background:#2e6b2e;color:#fff;font-weight:800;text-align:center;line-height:26px;border:2px solid #e0a93b}
+.nm{font-weight:800;text-align:center;margin:0 0 2px 14px;font-size:12px}
+.sk{text-align:center;font-style:italic;color:#6a3a10;min-height:14px}
+.ps{padding:2px 4px;border-radius:4px;margin-top:3px;opacity:.45}.ps.on{opacity:1;font-weight:600}
+.d{background:#f2b94b}.n{background:#a7a6d8}
+.st{position:absolute;left:4px;right:4px;bottom:4px;display:flex;justify-content:space-between;font-weight:800}
+.a{background:#9b2a1c;color:#fff;border-radius:50%;min-width:22px;text-align:center;padding:2px 4px}
+.h{background:#2e6b2e;color:#fff;border-radius:50%;min-width:22px;text-align:center;padding:2px 4px}
+.card.ok{box-shadow:0 0 10px 2px #ffe27a}.card.sel{outline:3px solid #fff}.card.tgt{outline:3px solid #ff6a4d;animation:p 1s infinite}
+.card.sick{filter:saturate(.5)}.card.cant{opacity:.55}
+@keyframes p{50%{opacity:.6}}
+#hint{text-align:center;min-height:24px;color:#ffe9b0;padding:4px}
+#lg{background:#0006;border-radius:8px;padding:8px;font-size:12px;max-height:150px;overflow:auto;color:#d8c9ae}
+#md{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9}
+#md[hidden]{display:none}#md div{background:#2a1608;border:2px solid #e0a93b;border-radius:12px;padding:18px;max-width:420px;text-align:center}
+#md button{margin:4px}
+</style></head><body class="day">
+<header><h1>ALAMAT <small>Set 01 prototype - draft rules</small></h1><div id="tm"></div>
+<div><button id="ph" onclick="clk('p')">Go to Atake</button> <button id="end" onclick="clk('e')">End turn</button> <button onclick="newGame()">New game</button></div></header>
+<main><section id="opp" class="side"></section><div id="hint"></div><section id="me" class="side"></section><div id="lg"></div></main>
+<div id="md" hidden></div>
+<script>
+const SK={Mabilis:"Can attack the turn it is played.",Lipad:"Can only be blocked or attacked by Lipad creatures.",Tibay:"Takes 1 less damage.",Panangga:"Can block during Day.",
+Paghilom:"End of your turn: heal your most damaged Nilalang, or your Katalonan.",Hamon:"Enemy attackers must attack this creature (unless they have Lipad).",
+Sinag:"Can attack during Day. Weak at Night.","Walang-Takot":"Can attack during Day. No Night penalty. May Empower when played."};
+const NO={x:"No change."},up=(a)=>({a,x:"+"+a+" ATK."}),hp1={h:1,x:"+1 HP."};
+const N=(n,c,a,h,s,d,ni,o={})=>({t:"N",n,c,a,h,s,d,ni,...o});
+const O=(n,c,x,fx,d,ni)=>({t:"O",n,c,x,fx,d,ni});
+const CARDS={
+tikbalang:N("Tikbalang",4,4,3,["Mabilis"],{s:["Tibay"],x:"Trickster. Gains Tibay."},{a:2,s:["Lipad"],x:"+2 ATK. Gains Lipad."}),
+kapre:N("Kapre",4,3,4,["Panangga","Tibay"],hp1,up(2)),
+duwende:N("Duwende",1,1,2,["Panangga"],{s:["Tibay"],x:"Hides. Gains Tibay."},up(1)),
+siyokoy:N("Siyokoy",3,3,3,["Mabilis"],hp1,up(2)),
+pugot:N("Pugot",3,3,2,["Mabilis"],hp1,up(2)),
+wakwak:N("Wak-wak",2,2,2,["Lipad"],hp1,up(2)),
+tiktik:N("Tiktik",2,1,1,["Lipad","Mabilis"],hp1,up(2)),
+ekek:N("Ekek",3,2,3,["Lipad"],hp1,up(2)),
+dalaketnon:N("Dalaketnon",3,2,4,["Panangga"],hp1,up(2)),
+tambanokano:N("Tambanokano",5,2,7,["Panangga","Tibay"],{h:1,x:"Shell. +1 HP."},up(2)),
+sarimanok:N("Sarimanok",4,3,3,["Sinag","Lipad"],{a:1,x:"Radiant. +1 ATK."},{a:-2,x:"Fades. -2 ATK."}),
+tigmamanukan:N("Tigmamanukan",3,2,3,["Sinag"],{a:1,x:"Omen. +1 ATK."},{a:-1,x:"-1 ATK."}),
+anggitay:N("Anggitay",4,2,3,["Sinag","Mabilis"],{a:2,x:"Gallop. +2 ATK."},{a:-2,x:"-2 ATK."}),
+diwata:N("Diwata",5,3,5,["Sinag","Paghilom"],{a:1,ph:2,x:"Blessing. +1 ATK. Paghilom 2."},{a:-2,x:"-2 ATK."},{ph:1}),
+maria:N("Maria Makiling",5,2,6,["Panangga","Paghilom"],{ph:2,x:"Mountain guardian. Paghilom 2."},up(2),{ph:1}),
+sirena:N("Sirena",3,2,4,["Paghilom"],{ph:2,x:"Song. Paghilom 2."},{a:1,s:["Lipad"],x:"+1 ATK. Gains Lipad."},{ph:1}),
+batibat:N("Batibat",5,3,6,["Hamon"],{h:2,x:"+2 HP."},up(2)),
+bakunawa:N("Bakunawa",7,6,7,["Lipad"],{h:2,x:"Slumber. +2 HP."},up(3)),
+bungisngis:N("Bungisngis",3,2,3,["Walang-Takot"],NO,NO,{e:{k:"hp",a:3,h:0,x:"lose 3 HP: +3 ATK"}}),
+alan:N("Alan",2,1,2,["Walang-Takot"],NO,NO,{e:{k:"disc",a:2,h:0,x:"discard 1 card: +2 ATK"}}),
+sarangay:N("Sarangay",4,2,4,["Walang-Takot"],NO,NO,{e:{k:"kal",a:3,h:0,x:"break 1 of your Kalasag: +3 ATK"}}),
+buwaya:N("Buwaya",4,3,3,["Walang-Takot"],NO,NO,{e:{k:"sac",a:3,h:2,x:"destroy 1 of your Nilalang: +3 ATK, +2 HP"}}),
+alakas:{t:"A",n:"Anting-anting ng Lakas",c:2,x:"Equipped +2 ATK.",q:{a:2,h:0,d:{h:1},n:{a:1}},d:"+1 HP.",ni:"+1 ATK."},
+abuhay:{t:"A",n:"Anting-anting ng Buhay",c:2,x:"Equipped +3 HP.",q:{a:0,h:3,d:{ph:1},n:{h:1}},d:"Paghilom 1.",ni:"+1 HP."},
+lakas:O("Orasyon ng Lakas",2,"Friendly Nilalang +2 ATK this turn.","lakas","Also +1 HP this turn.","+3 ATK instead."),
+pagh:O("Orasyon ng Paghilom",2,"Restore 3 HP.","pagh","Restore 4 HP.","Restore 3 HP."),
+apoy:O("Orasyon ng Apoy",3,"3 damage to an enemy Nilalang.","apoy","3 damage.","4 damage."),
+umaga:O("Orasyon ng Umaga",3,"Make it Day. Timer resets.","umaga","If already Day, draw 1.","Makes it Day."),
+gabi:O("Orasyon ng Gabi",3,"Make it Night. Timer resets.","gabi","Makes it Night.","If already Night, draw 1."),
+wasak:O("Orasyon ng Pagwasak",5,"Destroy an enemy Nilalang.","wasak","Costs 6.","Costs 4.")};
+const DECK=[...Object.keys(CARDS),"duwende","wakwak","tiktik","siyokoy","pugot","ekek","dalaketnon","kapre","tikbalang","sirena","apoy"];
+const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n),sl=ms=>new Promise(r=>setTimeout(r,ms*SPD));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const MAXAL=10; /* highest Alay a player can reach */
+const PHN={al:"Alay",sum:"Mantala at Pagtawag",atk:"Atake"}; /* phase names: rename here */
+const KAL=5; /* Kalasag per player: tune here */
+let G,sel=null,pend=null,busy=false,uid=0,SPD=1,HUMAN=[true,false],resolver=null;
+const mk=k=>({...CARDS[k],k,id:++uid,dm:0,tmp:0,th:0,eq:[],sick:true,att:false});
+const nm=i=>i?"Opponent":"You",log=s=>{G.log.unshift(s);G.log.length=Math.min(G.log.length,40)};
+const pers=c=>G.day?c.d:c.ni;
+function eff(c){const p=pers(c)||{};let a=c.a+(p.a||0)+c.tmp,h=c.h+(p.h||0)+c.th,ph=p.ph||c.ph||0;const sk=new Set([...c.s,...(p.s||[])]);
+ for(const q of c.eq){const z=(G.day?q.d:q.n)||{};a+=q.a+(z.a||0);h+=q.h+(z.h||0);(z.s||[]).forEach(s=>sk.add(s));ph=Math.max(ph,z.ph||0)}
+ return{a:Math.max(0,a),h,sk,ph}}
+const left=c=>eff(c).h-c.dm,cost=c=>c.fx==="wasak"?(G.day?6:4):c.c;
+function newGame(){uid=0;sel=pend=null;busy=false;G={t:0,first:0,round:1,day:true,ph:"al",left:2,over:false,log:[],
+ P:[0,1].map(()=>({hp:20,kal:[],hand:[],deck:[],f:[],max:0,al:0,dis:[]}))};
+ for(const p of G.P){p.deck=shuffle(DECK.map(mk));p.kal=p.deck.splice(0,KAL);p.hand=p.deck.splice(0,5)}
+ G.first=G.t=rnd(2);
+ log(`Coin toss: ${G.first?"the opponent goes":"you go"} first. Each turn: ${PHN.al}, then ${PHN.sum}, then ${PHN.atk}. Max 6 Nilalang in play.`);
+ render();
+ if(HUMAN.some(Boolean)){$("md").hidden=false;$("md").innerHTML=`<div><h2>Coin toss</h2><p>${G.first?"Tails: the opponent goes first.":"Heads: you go first."}</p><button onclick="begin()">Start</button></div>`}else begin()}
+function begin(){$("md").hidden=true;startTurn(G.t);render();if(HUMAN[G.t]===false)runAI(G.t)}
+function draw(i){const p=G.P[i];if(p.deck.length)p.hand.push(p.deck.pop());else{G.over=true;log(nm(i)+" cannot draw.");end(1-i)}}
+function startTurn(i){const p=G.P[i];p.f.forEach(c=>{c.sick=false;c.att=false});G.ph="al";log(`${nm(i)} start turn ${G.round}: ${PHN.al} phase.`)}
+function collect(i){const p=G.P[i];p.max=Math.min(MAXAL,p.max+1);p.al=p.max;if(!(i===G.first&&G.round===1))draw(i);G.ph="sum";log(`${nm(i)} gather Alay (${p.al}/${p.max}). Now ${PHN.sum}.`)}
+function setDay(v){if(G.day!==v){G.day=v;log(v?"Araw: it is Day.":"Gabi: it is Night.");for(const p of G.P)p.f.forEach(c=>{const m=eff(c).h;if(c.dm>=m)c.dm=m-1})}G.left=2}
+function canAtk(c){const e=eff(c);return!c.att&&(!c.sick||e.sk.has("Mabilis"))&&e.a>0&&(!G.day||e.sk.has("Sinag")||e.sk.has("Walang-Takot"))}
+const PANANGGA_ONLY=false; /* true = only Panangga creatures may defend, at Day AND Night */
+function canBlock(b,a){const e=eff(b);return((!G.day&&!PANANGGA_ONLY)||e.sk.has("Panangga"))&&(!eff(a).sk.has("Lipad")||e.sk.has("Lipad"))}
+function dmg(c,x){c.dm+=Math.max(0,x-(eff(c).sk.has("Tibay")?1:0))}
+function sweep(){for(const p of G.P)p.f=p.f.filter(c=>{if(left(c)>0)return true;p.dis.push(c);log(c.n+" is destroyed.");return false})}
+function end(w){G.over=true;busy=false;render();$("md").hidden=false;$("md").innerHTML=`<div><h2>${w===0?"You win!":"You lose"}</h2><button onclick="newGame()">Play again</button></div>`}
+function hitK(j,atk){const d=G.P[j];if(d.kal.length){const c=d.kal.splice(rnd(d.kal.length),1)[0];d.hand.push(c);log(`${nm(j)}: a Kalasag breaks${j===0?" ("+c.n+" to Kamay)":""}.`)}
+ else{d.hp-=atk;log(`${nm(j)} take ${atk} damage (${Math.max(0,d.hp)} HP left).`);if(d.hp<=0)end(1-j)}}
+async function doAttack(i,c,t){const j=1-i,d=G.P[j];c.att=true;
+ if(!t){const T=targets(i,c);if(!T.k)t=T.f[0]}
+ if(t){log(`${nm(i)}: ${c.n} attacks ${t.n}.`);
+  const gd=d.f.filter(b=>b!==t&&eff(b).sk.has("Panangga")&&canBlock(b,c));let g=null;
+  if(gd.length)g=HUMAN[j]?await askBlock(c,gd,t):aiGuard(j,c,t,gd);
+  if(g){log(`${g.n} (Panangga) defends ${t.n}.`);fight(c,g)}else fight(c,t)}
+ else{log(`${nm(i)}: ${c.n} attacks the Katalonan (ATK ${eff(c).a}).`);const bl=d.f.filter(b=>canBlock(b,c));let b=null;if(bl.length)b=HUMAN[j]?await askBlock(c,bl):aiBlock(j,c,bl);
+  if(b){log(b.n+" defends.");fight(c,b)}else hitK(j,eff(c).a)}
+ sweep();sel=null;render()}
+function targets(i,c){const o=G.P[1-i],ea=eff(c),reach=x=>!eff(x).sk.has("Lipad")||ea.sk.has("Lipad");
+ const ham=ea.sk.has("Lipad")?[]:o.f.filter(x=>eff(x).sk.has("Hamon")&&reach(x));
+ return ham.length?{k:false,f:ham}:{k:true,f:o.f.filter(reach)}}
+function fight(a,b){const x=eff(a).a,y=eff(b).a;dmg(b,x);dmg(a,y)}
+function askBlock(a,bl,t){return new Promise(r=>{resolver=r;$("md").hidden=false;
+ $("md").innerHTML=`<div><p>${PHN.atk}: ${t?`${a.n} (ATK ${eff(a).a}) attacks your ${t.n}. Defend it with a Panangga creature?`:`${a.n} attacks with ${eff(a).a} ATK. Defend${G.day||PANANGGA_ONLY?" with a Panangga creature":""}?`}</p>${bl.map(b=>`<button onclick="ans(${b.id})">${b.n} (${eff(b).a}/${left(b)})</button>`).join("")}<br><button onclick="ans(0)">No block</button></div>`})}
+function ans(id){$("md").hidden=true;const b=G.P[0].f.find(x=>x.id===id)||null;const r=resolver;resolver=null;r(b)}
+function aiGuard(j,a,t,gd){const ea=eff(a).a,dies=ea-(eff(t).sk.has("Tibay")?1:0)>=left(t);let best=null,bs=0;
+ for(const b of gd){const surv=ea-(eff(b).sk.has("Tibay")?1:0)<left(b),kill=eff(b).a-(eff(a).sk.has("Tibay")?1:0)>=left(a);
+  const s=kill&&surv?3:surv&&dies?2.5:kill&&dies?1.5:kill?1:0;if(s>bs){bs=s;best=b}}return best}
+function aiBlock(j,a,bl){const ea=eff(a).a;let best=null,bs=0;for(const b of bl){const surv=ea-(eff(b).sk.has("Tibay")?1:0)<left(b),kill=eff(b).a-(eff(a).sk.has("Tibay")?1:0)>=left(a);
+ const s=kill&&surv?3:surv?2:kill?1.5:(G.P[j].kal.length===0&&G.P[j].hp<=ea?1:0);if(s>bs){bs=s;best=b}}return best}
+function pay(i,c){const p=G.P[i];p.al-=cost(c);p.hand=p.hand.filter(x=>x!==c)}
+function playN(i,c){const p=G.P[i];if(cost(c)>p.al||p.f.length>=6)return false;pay(i,c);const e=c.e;
+ if(e&&HUMAN[i]&&canEmp(i,e)&&confirm(`Empower ${c.n}? Cost: ${e.x}.`)){emp(i,c,e)}p.f.push(c);c.sick=true;log(`${nm(i)} play ${c.n}.`);return true}
+function canEmp(i,e){const p=G.P[i];return e.k==="hp"?p.hp>3:e.k==="kal"?p.kal.length>0:e.k==="disc"?p.hand.length>1:p.f.length>0}
+function emp(i,c,e){const p=G.P[i];if(e.k==="hp")p.hp-=3;
+ else if(e.k==="kal")p.hand.push(p.kal.pop());
+ else if(e.k==="disc"){const d=p.hand.filter(x=>x!==c).sort((a,b)=>a.c-b.c)[0];p.hand=p.hand.filter(x=>x!==d);p.dis.push(d)}
+ else{const v=p.f.slice().sort((a,b)=>eff(a).a+left(a)-eff(b).a-left(b))[0];v.dm=999;sweep()}
+ c.a+=e.a;c.h+=e.h;log(`${c.n} is empowered.`)}
+const ty=c=>c.t==="A"?"ally":({lakas:"ally",pagh:"any",apoy:"foe",wasak:"foe"})[c.fx]||"none";
+function cast(i,c,t){const p=G.P[i];if(cost(c)>p.al)return false;pay(i,c);
+ if(c.t==="A")t.eq.push({...c.q});
+ else{const f=c.fx;log(`${nm(i)} cast ${c.n}.`);
+  if(f==="lakas"){t.tmp+=G.day?2:3;if(G.day)t.th+=1}
+  else if(f==="pagh"){const n=G.day?4:3;if(t.kat!==undefined)G.P[t.kat].hp=Math.min(20,G.P[t.kat].hp+n);else t.dm=Math.max(0,t.dm-n)}
+  else if(f==="apoy")dmg(t,G.day?3:4);
+  else if(f==="wasak")t.dm=999;
+  else if(f==="umaga"){if(G.day)draw(i);else setDay(true)}
+  else if(f==="gabi"){if(!G.day)draw(i);else setDay(false)}}
+ if(c.t==="O")p.dis.push(c);sweep();return true}
+function endTurn(i){const p=G.P[i];
+ const w=p.f.filter(c=>eff(c).ph>0).reduce((m,c)=>Math.max(m,eff(c).ph),0);
+ if(w){const t=p.f.filter(c=>c.dm>0).sort((a,b)=>b.dm-a.dm)[0];if(t){t.dm=Math.max(0,t.dm-w);log(`Paghilom heals ${t.n}.`)}else if(p.hp<20){p.hp=Math.min(20,p.hp+w);log(`Paghilom heals ${nm(i)}.`)}}
+ for(const q of G.P)q.f.forEach(c=>{c.tmp=0;c.th=0;const m=eff(c).h;if(c.dm>=m)c.dm=m-1});
+ if(i!==G.first){G.left--;G.round++;if(G.left<=0)setDay(!G.day)}
+ G.t=1-i;startTurn(G.t);render();if(HUMAN[G.t]===false)runAI(G.t)}
+async function runAI(i){busy=true;render();await sl(700);const p=G.P[i],o=G.P[1-i];collect(i);render();await sl(500);
+ for(let n=0;n<10&&!G.over;n++){let did=false;
+  for(const c of p.hand.filter(c=>cost(c)<=p.al).sort((a,b)=>cost(b)-cost(a))){if(aiPlay(i,c)){did=true;break}}
+  if(!did)break;sel=null;render();await sl(650)}
+ G.ph="atk";log(`${nm(i)} enter ${PHN.atk}.`);render();await sl(500);
+ for(const c of [...p.f]){if(G.over)break;if(!p.f.includes(c)||!canAtk(c))continue;
+  const T=targets(i,c);let bt=null,bv=-1;for(const t of T.f){const ke=eff(c).a-(eff(t).sk.has("Tibay")?1:0)>=left(t),sv=eff(t).a-(eff(c).sk.has("Tibay")?1:0)<left(c);if(ke&&sv&&eff(t).a+left(t)>bv){bv=eff(t).a+left(t);bt=t}}
+  const bl=o.f.filter(b=>canBlock(b,c)),mx=Math.max(0,...bl.map(b=>eff(b).a));
+  if(bt&&!(T.k&&!bl.length)){await doAttack(i,c,bt);await sl(700);continue}if(!T.k)continue;
+  if(!bl.length||(eff(c).a>mx&&left(c)>mx)||(eff(c).a>=mx&&Math.random()<0.5)||(o.kal.length===0&&Math.random()<0.6)){await doAttack(i,c);await sl(700)}}
+ busy=false;if(!G.over)endTurn(i)}
+function aiPlay(i,c){const p=G.P[i],o=G.P[1-i];const best=p.f.slice().sort((a,b)=>eff(b).a-eff(a).a)[0];
+ if(c.t==="N")return playN(i,c);
+ if(c.t==="A")return best?cast(i,c,best):false;
+ const f=c.fx;
+ if(f==="lakas"){const t=p.f.find(canAtk);return t?cast(i,c,t):false}
+ if(f==="pagh"){const t=p.f.filter(x=>x.dm>2)[0];return t?cast(i,c,t):(p.hp<=12?cast(i,c,{kat:i}):false)}
+ if(f==="apoy"||f==="wasak"){const t=o.f.slice().sort((a,b)=>eff(b).a+left(b)-eff(a).a-left(a))[0];
+  if(!t||(f==="wasak"&&eff(t).a+left(t)<8)||(f==="apoy"&&left(t)>(G.day?3:4)&&eff(t).a<4))return false;return cast(i,c,t)}
+ const dayers=x=>eff(x).sk.has("Sinag")||eff(x).sk.has("Walang-Takot");
+ if(f==="gabi")return G.day&&p.f.some(x=>!dayers(x))&&!o.f.some(dayers)?cast(i,c,null):false;
+ if(f==="umaga")return!G.day&&p.f.some(dayers)&&!o.f.some(x=>!dayers(x))?cast(i,c,null):false;
+ return false}
+function find(id){for(const i of[0,1]){const c=G.P[i].f.find(x=>x.id===id);if(c)return{c,i}}}
+async function clk(k,id){if(G.over||busy||G.t!==0)return;const p=G.P[0];
+ if(k==="e"){sel=pend=null;return endTurn(0)}
+ if(k==="p"){sel=pend=null;if(G.ph==="al"){collect(0);render()}else if(G.ph==="sum"){G.ph="atk";log(`You enter ${PHN.atk}.`);render()}return}
+ if(k==="h"){if(G.ph!=="sum"){$("hint").textContent=`Cards are played in ${PHN.sum}.`;return}const c=p.hand.find(x=>x.id===id);if(pend&&pend.c===c){pend=null;return render()}
+  if(cost(c)>p.al){$("hint").textContent="Not enough Alay.";return}
+  pend=null;if(c.t==="N"){const ok=playN(0,c);render();if(!ok)$("hint").textContent="Your field is full (max 6 Nilalang).";return}
+  if(ty(c)==="none"){cast(0,c,null);return render()}
+  pend={c,ty:ty(c)};sel=null;return render()}
+ if(k==="f"){const r=find(id);if(!r)return;
+  if(pend){const ok=pend.ty==="foe"?r.i===1:(pend.ty==="ally"||pend.ty==="any")&&r.i===0;if(ok){cast(0,pend.c,r.c);pend=null}return render()}
+  if(r.i===1&&sel&&G.ph==="atk"){if(targets(0,sel).f.includes(r.c))return doAttack(0,sel,r.c);$("hint").textContent=sel.n+" cannot attack that creature (Hamon or Lipad).";return}
+  if(r.i===0&&G.ph==="atk"&&canAtk(r.c))sel=sel===r.c?null:r.c;return render()}
+ if(k==="k"){if(pend&&pend.ty==="any"&&id===0){cast(0,pend.c,{kat:0});pend=null;return render()}
+  if(id===1&&sel&&G.ph==="atk"){if(targets(0,sel).k)await doAttack(0,sel,null);else $("hint").textContent="Hamon: you must attack the Hamon creature."}}}
+function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>typeof x==="string"?x:x.x;
+ const sk=f?[...e.sk]:(c.s||[]);const cls=["card",c.t,o.cls||""].join(" ");
+ const st=c.t==="N"?`<div class="st"><span class="a">${f?e.a:c.a}</span><span class="h">${f?left(c):c.h}</span></div>`:"";
+ const emp=c.e?`<div class="sk">Empower: ${c.e.x}</div>`:"";
+ return`<div class="${cls}" onclick="clk('${o.k}',${c.id})" title="${sk.map(s=>s+": "+(SK[s]||"")).join("\n")}"><b class="cost">${cost(c)}</b><div class="nm">${c.n}</div>
+ <div class="sk">${c.t==="N"?sk.join(", "):c.t==="A"?"Anting-anting":"Orasyon"}</div>${c.t!=="N"?`<div class="sk">${c.x}</div>`:""}${emp}
+ <div class="ps d${G.day?" on":""}">&#9728; ${pe(c.d)}</div><div class="ps n${G.day?"":" on"}">&#9790; ${pe(c.ni)}</div>${st}</div>`}
+function side(i){const p=G.P[i];const kc=`k${pend&&pend.ty==="any"&&i===0?" tgt":""}${sel&&i===1&&G.ph==="atk"&&targets(0,sel).k?" tgt":""}`;
+ return`<div class="bar"><span class="${kc}" onclick="clk('k',${i})"><b>${nm(i)}</b> Katalonan HP ${Math.max(0,p.hp)}</span>
+ <span>Kalasag ${'<i class="pip"></i>'.repeat(p.kal.length)||"none"}</span><span>Alay ${p.al}/${p.max}</span><span>Kamay ${p.hand.length}</span><span>Deck ${p.deck.length}</span></div>
+ <div class="row">${p.f.map(c=>{let x="";if(i===0&&sel===c)x="sel";else if(i===0&&G.t===0&&G.ph==="atk"&&!pend&&canAtk(c))x="ok";
+  else if(pend&&((pend.ty==="foe"&&i===1)||(pend.ty!=="foe"&&i===0&&pend.ty!=="none")))x="tgt";else if(sel&&i===1&&G.ph==="atk"&&targets(0,sel).f.includes(c))x="tgt";else if(c.sick&&i===0)x="sick";
+  return card(c,{f:1,k:"f",cls:x})}).join("")||"<i>No Nilalang in play</i>"}</div>
+ ${i===0?`<div class="row" style="margin-top:8px">${p.hand.map(c=>card(c,{k:"h",cls:c===(pend&&pend.c)?"sel":(cost(c)>p.al||G.ph!=="sum")?"cant":""})).join("")}</div>`:""}`}
+function render(){document.body.className=G.day?"day":"night";
+ $("tm").innerHTML=`${G.day?"&#9728; ARAW (Day)":"&#9790; GABI (Night)"} - Round ${G.round} - flips in ${G.left} round${G.left>1?"s":""}<br><small>${G.day?"Only Sinag and Walang-Takot attack. Only Panangga defend.":PANANGGA_ONLY?"Everyone attacks. Only Panangga defend.":"Everyone attacks and defends."}</small><br>Yugto: ${["al","sum","atk"].map(k=>k===G.ph?"<b>"+PHN[k]+"</b>":PHN[k]).join(" &rsaquo; ")} - ${nm(G.t)}`;
+ $("opp").innerHTML=side(1);$("me").innerHTML=side(0);
+ $("hint").textContent=G.over?"":busy||G.t!==0?"Opponent is playing...":pend?"Choose a target (click the card again to cancel).":G.ph==="al"?`${PHN.al}: press Collect ${PHN.al} to draw a card and gain Alay.`:G.ph==="sum"?`${PHN.sum}: play your cards, then press Go to ${PHN.atk}.`:sel?"Click the opponent's Katalonan or a highlighted creature to attack.":`${PHN.atk}: click a glowing creature to attack, or End turn.`;
+ $("end").disabled=busy||G.t!==0||G.over;$("ph").disabled=busy||G.t!==0||G.over||G.ph==="atk";$("ph").textContent=G.ph==="al"?"Collect "+PHN.al:"Go to "+PHN.atk;$("lg").innerHTML=G.log.map(s=>"<div>"+s+"</div>").join("")}
+if(typeof window!=="undefined"&&typeof process==="undefined")newGame();
+</script></body></html>
