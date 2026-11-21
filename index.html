@@ -3,44 +3,98 @@
 <title>Alamat TCG - Set 01 Prototype</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font:13px/1.35 system-ui,sans-serif;color:#f6ead6;transition:background .7s;min-height:100vh}
-body.day{background:linear-gradient(#6a4416,#1f130a)}body.night{background:linear-gradient(#17143f,#0a0818)}
-header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px 14px;background:#0006;flex-wrap:wrap}
-h1{margin:0;font-size:18px;letter-spacing:2px;color:#e0a93b}h1 small{font-size:11px;color:#c9b89c;letter-spacing:0}
-#tm{text-align:center;font-weight:600}#tm small{font-weight:400;color:#d8c9ae}
-button{background:#e0a93b;color:#2a1608;border:0;border-radius:6px;padding:7px 12px;font-weight:700;cursor:pointer}
-button:disabled{opacity:.4;cursor:default}
-main{max-width:1100px;margin:0 auto;padding:8px 10px 20px}
-.side{background:#0004;border:1px solid #e0a93b44;border-radius:10px;padding:8px;margin:6px 0}
-.bar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
-.k{padding:4px 10px;border-radius:8px;background:#7a2e1d;cursor:pointer;border:2px solid transparent}
-.k.tgt{border-color:#ff6a4d;animation:p 1s infinite}.k.sel{border-color:#fff}
-.pip{display:inline-block;width:10px;height:14px;background:#e0a93b;margin-right:2px;border-radius:2px}
-.row{display:flex;gap:8px;flex-wrap:wrap;min-height:30px}
-.card{position:relative;width:132px;min-height:172px;padding:6px 6px 26px;border-radius:9px;background:#f3e2bd;color:#2a1608;border:3px solid #b87a1d;cursor:pointer;font-size:11px}
-.card.O{background:#e4d6f0}.card.A{background:#d8ecd6}
-.card .cost{position:absolute;left:-8px;top:-8px;width:26px;height:26px;border-radius:50%;background:#2e6b2e;color:#fff;font-weight:800;text-align:center;line-height:26px;border:2px solid #e0a93b}
-.nm{font-weight:800;text-align:center;margin:0 0 2px 14px;font-size:12px}
-.sk{text-align:center;font-style:italic;color:#6a3a10;min-height:14px}
-.ps{padding:2px 4px;border-radius:4px;margin-top:3px;opacity:.45}.ps.on{opacity:1;font-weight:600}
-.d{background:#f2b94b}.n{background:#a7a6d8}
-.st{position:absolute;left:4px;right:4px;bottom:4px;display:flex;justify-content:space-between;font-weight:800}
-.a{background:#9b2a1c;color:#fff;border-radius:50%;min-width:22px;text-align:center;padding:2px 4px}
-.h{background:#2e6b2e;color:#fff;border-radius:50%;min-width:22px;text-align:center;padding:2px 4px}
-.card.ok{box-shadow:0 0 10px 2px #ffe27a}.card.sel{outline:3px solid #fff}.card.tgt{outline:3px solid #ff6a4d;animation:p 1s infinite}
-.card.sick{filter:saturate(.5)}.card.cant{opacity:.55}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font:14px/1.3 Georgia,"Times New Roman",serif;color:#f6ead6;transition:background .8s}
+body.day{background:url(assets/bg-day.webp) center/cover no-repeat,linear-gradient(#3b2a55 0%,#b16f3d 42%,#4d3216 100%)}
+body.night{background:url(assets/bg-night.webp) center/cover no-repeat,linear-gradient(#0a0924 0%,#1d1946 45%,#1a1208 100%)}
+#stage{position:absolute;width:1672px;height:941px;transform-origin:0 0;overflow:hidden}
+#top{position:absolute;left:0;top:0;width:1672px;height:92px;background:linear-gradient(#000b,#0000)}
+.logo{position:absolute;left:26px;top:8px;font-size:46px;font-weight:700;color:#f0c35a;letter-spacing:4px;text-shadow:0 2px 4px #000;line-height:1}
+.logo small{display:block;font-size:20px;letter-spacing:8px;text-align:center}
+.set{position:absolute;left:292px;top:32px;font-size:17px;color:#e8d9b8}
+#daypill{position:absolute;left:690px;top:10px;width:300px;height:62px;border:2px solid #c99a3a;border-radius:10px;background:#2a1608cc;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:#ffe9b0}
+#info{position:absolute;left:1120px;top:12px;width:460px;text-align:right;font-size:17px;color:#f0dcb0;line-height:1.35}#info small{font-size:14px;color:#d8c9a4}#info b{color:#ffe9b0}
+#gear{position:absolute;left:1594px;top:12px;width:60px;height:60px;border-radius:10px;font-size:30px;padding:0;background:#2a1608cc;border:2px solid #c99a3a;color:#f0c35a;cursor:pointer}
+.sd{position:absolute;left:0;top:0;width:1672px;height:941px;pointer-events:none}.sd>*{pointer-events:auto}
+.zn{position:absolute;left:425px;width:905px;height:205px;border:3px solid #a8782a;border-radius:14px;background:linear-gradient(#5a3f1ce0,#3a2610e0)}
+#s1 .zn{top:95px}#s0 .zn{top:500px}
+.zt{position:absolute;left:50%;top:-16px;transform:translateX(-50%);padding:3px 34px;background:#3a2610;border:2px solid #c99a3a;border-radius:8px;font-size:19px;letter-spacing:1px;color:#ffe0a0;white-space:nowrap}
+.sl{position:absolute;left:95px;top:30px;display:flex;gap:10px}
+.slot{width:117px;height:163px;border:2px solid #b8862f;border-radius:8px;background:#2a1a0a99;display:flex;align-items:center;justify-content:center;color:#b8862f66;font-size:40px}.slot::after{content:"\2726"}
+.sl .fc{--cw:117px}
+.ip{position:absolute;z-index:2;border:3px solid #c99a3a;border-radius:12px;padding:10px 16px;font-size:24px}
+#s1 .ip{left:165px;top:100px;width:325px;height:95px;background:linear-gradient(90deg,#8a1f1a,#4d1210)}
+#s0 .ip{left:22px;top:503px;width:453px;height:97px;background:linear-gradient(90deg,#1e4a8f,#10264d)}
+.ip small{display:block;font-size:14px;color:#f0dcb0;margin-top:4px}.ip i{font-size:18px;opacity:.85}.hv{float:right;font-weight:700}
+.dk{position:absolute;left:22px;width:143px;border:3px solid #c99a3a;border-radius:12px;background:#2a1608dd;text-align:center;padding:8px}
+#s1 .dk{top:108px;height:200px}#s0 .dk{top:593px;height:185px}
+.dk img{width:92px;height:128px;object-fit:cover;border-radius:6px;display:block;margin:0 auto 4px}.dk b{font-size:18px;display:block}.dk span{font-size:14px;color:#d8c9a4}
+.hpn{position:absolute;left:1350px;width:230px;height:196px;border:3px solid #c99a3a;border-radius:12px;text-align:center;padding-top:8px;cursor:pointer}
+#s1 .hpn{top:107px;background:linear-gradient(#8a1f1a,#4d1210)}#s0 .hpn{top:510px;background:linear-gradient(#1e4a8f,#10264d)}
+.hpn b{display:block;font-size:20px;letter-spacing:1px;color:#ffe0a0}.hpt{display:block;font-size:44px;font-weight:700;margin:4px 0}
+.ks{display:flex;justify-content:center;flex-wrap:wrap;gap:4px}
+.hpn.tgt{outline:4px solid #ff6a4d;animation:p 1s infinite}
+.bk{width:30px;height:42px;object-fit:cover;border-radius:3px}.pip{display:inline-block;width:22px;height:30px;background:#e0a93b;border-radius:3px}
+#mid{position:absolute;left:520px;top:332px;width:632px;height:116px;text-align:center;background:linear-gradient(90deg,#0000,#2a1608d0 20%,#2a1608d0 80%,#0000);padding-top:8px}
+#mid b{display:block;font-size:42px;letter-spacing:3px;color:#f3c360;text-shadow:0 2px 4px #000}
+#hint{font-size:17px;color:#ffe9b0}#rule{font-size:14px;color:#d8c9a4;margin-top:2px}
+#hand{position:absolute;left:430px;top:752px;width:830px;height:200px;display:flex;justify-content:center;align-items:flex-start}
+#hand .fc{--cw:150px;transform:rotate(var(--r,0deg)) translateY(var(--y,0px));transition:transform .15s;transform-origin:50% 120%}
+#hand .fc:hover{transform:rotate(0) translateY(-85px);z-index:9}
+#alay{position:absolute;left:117px;top:790px;width:208px;height:110px;border:3px solid #c99a3a;border-radius:12px;background:#2a1608dd;text-align:center;font-size:22px;padding-top:6px;z-index:2}
+#alay svg{width:34px;height:46px;vertical-align:middle;margin-right:8px}#alay span{font-size:44px;font-weight:700}
+#btns{position:absolute;left:1405px;top:762px;width:245px}
+#btns button{display:block;width:100%;margin-bottom:10px;height:58px;font:700 26px Georgia,serif;color:#3a1c08;background:linear-gradient(#ffd877,#d89a2c);border:3px solid #fff1b8;border-radius:12px;cursor:pointer;box-shadow:0 3px 8px #0008}
+#btns button:disabled{opacity:.45;cursor:default}
+#lg{position:absolute;left:1350px;top:318px;width:300px;height:170px;overflow:auto;background:#000c;border:2px solid #c99a3a;border-radius:8px;padding:6px 10px;font-size:13px;color:#d8c9a4;z-index:5}#lg[hidden]{display:none}
+#md{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:20}#md[hidden]{display:none}
+#md div{background:#2a1608;border:2px solid #e0a93b;border-radius:12px;padding:18px;max-width:420px;text-align:center}#md button{margin:4px;background:#e0a93b;color:#2a1608;border:0;border-radius:6px;padding:7px 12px;font-weight:700;cursor:pointer}
 @keyframes p{50%{opacity:.6}}
-#hint{text-align:center;min-height:24px;color:#ffe9b0;padding:4px}
-#lg{background:#0006;border-radius:8px;padding:8px;font-size:12px;max-height:150px;overflow:auto;color:#d8c9ae}
-#md{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;z-index:9}
-#md[hidden]{display:none}#md div{background:#2a1608;border:2px solid #e0a93b;border-radius:12px;padding:18px;max-width:420px;text-align:center}
-#md button{margin:4px}
+.fc{position:relative;flex:none;width:var(--cw,150px);aspect-ratio:1064/1478;container-type:inline-size;border-radius:3.2%/2.3%;background:radial-gradient(circle at 50% 35%,#4a3320,#1a1008);cursor:pointer;overflow:hidden}
+.fc img{position:absolute;display:block;pointer-events:none;user-select:none}
+.fc .art{object-fit:cover;z-index:1}.fc .fr{left:0;top:0;width:100%;height:100%;z-index:2}
+.fc .x{position:absolute;z-index:3;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1}
+.fc .noart{z-index:0;font-size:12cqw;font-style:normal;letter-spacing:.2em;color:rgba(255,255,255,.09)}
+.cost{font-size:9.5cqw;color:#3b2410;text-shadow:0 0 .8cqw rgba(255,240,200,.9)}
+.nm{color:#3b2410;font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.05em;line-height:1}
+.ty{flex-direction:column;color:#f3e2bd;line-height:1.05}.ty b{font-size:2.1cqw;letter-spacing:.06em}.ty i{font-size:1.9cqw}
+.gm{display:inline-block;width:1.7cqw;height:1.7cqw;border-radius:50%;margin-right:.8cqw;border:.2cqw solid #f3e2bd;vertical-align:middle}
+.sp{color:#f3e2bd;letter-spacing:.1em}.ef{color:#3b2410;font-weight:600;line-height:1.2}
+.ph{font-size:3.4cqw;font-weight:800;letter-spacing:.12em;color:#fff3d6;text-shadow:0 .2cqw .5cqw #000}
+.pb{color:#3b2410;font-weight:600;font-size:2.6cqw;line-height:1.1}.fc.X .pb{font-size:3cqw}
+.pn{border-radius:2%;pointer-events:none}.pn.off{background:rgba(12,7,3,.55)}
+.pd.on{box-shadow:0 0 2.2cqw .6cqw rgba(255,214,90,.85)}.pg.on{box-shadow:0 0 2.2cqw .6cqw rgba(140,150,255,.9)}
+.orb{flex-direction:column;color:#fff;font-size:8.5cqw;line-height:.95;text-shadow:0 .3cqw .6cqw #000,0 0 1.2cqw #000}.orb small{font-size:2.3cqw;letter-spacing:.08em}
+.st{color:#f3e2bd;font-style:italic;font-size:2.5cqw;background:rgba(20,10,4,.55);border-radius:2cqw}
+.fc.ok{box-shadow:0 0 14px 4px #ffe27a}.fc.sel{outline:3px solid #fff}.fc.tgt{outline:3px solid #ff6a4d;animation:p 1s infinite}
+.fc.sick{filter:saturate(.55)}.fc.cant{filter:grayscale(.5) brightness(.65)}
+#zm{position:fixed;right:14px;top:76px;z-index:30;pointer-events:none}#zm[hidden]{display:none}#zm .fc{--cw:min(380px,40vw)}
+
+.fc .art,.fc .noart{left:7.99%;top:9.88%;width:84.21%;height:54.26%}.fc.X .art{left:7.05%;top:10.08%;width:85.81%;height:49.80%}
+.fc .bg{left:0;top:0;width:100%;height:100%;z-index:0}
+.cost{left:7.33%;top:4.19%;width:11.28%;height:8.12%}.nm{left:27.26%;top:2.71%;width:48.40%;height:7.31%}.ty{left:79.42%;top:4.19%;width:16.45%;height:4.60%}
+.sp{left:36.18%;top:61.43%;width:29.61%;height:5.41%}.ef{left:9.87%;top:67.86%;width:80.83%;height:8.46%}
+.ph{top:77.47%;height:4.74%}.dh{left:24.25%;width:23.50%}.nh{left:65.79%;width:21.15%}
+.pb{top:83.22%;height:4.40%}.db{left:16.45%;width:31.30%}.nb{left:53.10%;width:31.95%}
+.pn{top:76.79%;height:11.50%}.pd{left:11.75%;width:37.12%}.pg{left:51.22%;width:37.59%}
+.atk{left:4.70%;top:85.39%;width:12.78%;height:9.20%}.hpv{left:82.89%;top:85.72%;width:12.78%;height:9.20%}.st{left:23.97%;top:89.17%;width:53.10%;height:4.53%}
+.fc.X .sp{left:32.42%;top:59.54%;width:33.83%;height:4.87%}.fc.X .ef{left:9.40%;top:64.95%;width:81.30%;height:9.34%}
+.fc.X .ph{top:75.44%;height:4.74%}.fc.X .dh{left:23.03%;width:24.44%}.fc.X .nh{left:64.85%;width:24.44%}
+.fc.X .pb{top:81.06%;height:9.07%}.fc.X .db{left:11.75%;width:35.24%}.fc.X .nb{left:52.63%;width:36.18%}
+.fc.X .pn{top:74.76%;height:16.24%}.fc.X .pd{left:9.40%;width:39.47%}.fc.X .pg{left:50.75%;width:40.41%}
 </style></head><body class="day">
-<header><h1>ALAMAT <small>Set 01 prototype - draft rules</small></h1><div id="tm"></div>
-<div><button id="ph" onclick="clk('p')">Go to Atake</button> <button id="end" onclick="clk('e')">End turn</button> <button onclick="newGame()">New game</button></div></header>
-<main><section id="opp" class="side"></section><div id="hint"></div><section id="me" class="side"></section><div id="lg"></div></main>
+<div id="stage">
+<div id="top"><div class="logo">ALAMAT<small>TCG</small></div><div class="set">Set 01 Prototype</div><div id="daypill"></div><div id="info"></div><button id="gear" onclick="tg()" title="Game log">&#9881;</button></div>
+<div id="s1" class="sd"></div><div id="mid"><b>BATTLEFIELD</b><div id="hint"></div><div id="rule"></div></div><div id="s0" class="sd"></div>
+<div id="hand"></div><div id="alay"></div>
+<div id="btns"><button id="ph" onclick="clk('p')">Go to Atake</button><button id="end" onclick="clk('e')">End Turn</button></div>
+<div id="lg" hidden></div>
+</div>
+<div id="zm" hidden></div>
 <div id="md" hidden></div>
 <script>
+
+
 const SK={Mabilis:"Can attack the turn it is played.",Lipad:"Can only be blocked or attacked by Lipad creatures.",Tibay:"Takes 1 less damage.",Panangga:"Can block during Day.",
 Paghilom:"End of your turn: heal your most damaged Nilalang, or your Katalonan.",Hamon:"Enemy attackers must attack this creature (unless they have Lipad).",
 Sinag:"Can attack during Day. Weak at Night.","Walang-Takot":"Can attack during Day. No Night penalty. May Empower when played."};
@@ -84,7 +138,7 @@ const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[
 const MAXAL=10; /* highest Alay a player can reach */
 const PHN={al:"Alay",sum:"Mantala at Pagtawag",atk:"Atake"}; /* phase names: rename here */
 const KAL=5; /* Kalasag per player: tune here */
-let G,sel=null,pend=null,busy=false,uid=0,SPD=1,HUMAN=[true,false],resolver=null;
+let tz,G,sel=null,pend=null,busy=false,uid=0,SPD=1,HUMAN=[true,false],resolver=null;
 const mk=k=>({...CARDS[k],k,id:++uid,dm:0,tmp:0,th:0,eq:[],sick:true,att:false});
 const nm=i=>i?"Opponent":"You",log=s=>{G.log.unshift(s);G.log.length=Math.min(G.log.length,40)};
 const pers=c=>G.day?c.d:c.ni;
@@ -197,24 +251,56 @@ async function clk(k,id){if(G.over||busy||G.t!==0)return;const p=G.P[0];
   if(r.i===0&&G.ph==="atk"&&canAtk(r.c))sel=sel===r.c?null:r.c;return render()}
  if(k==="k"){if(pend&&pend.ty==="any"&&id===0){cast(0,pend.c,{kat:0});pend=null;return render()}
   if(id===1&&sel&&G.ph==="atk"){if(targets(0,sel).k)await doAttack(0,sel,null);else $("hint").textContent="Hamon: you must attack the Hamon creature."}}}
-function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>typeof x==="string"?x:x.x;
- const sk=f?[...e.sk]:(c.s||[]);const cls=["card",c.t,o.cls||""].join(" ");
- const st=c.t==="N"?`<div class="st"><span class="a">${f?e.a:c.a}</span><span class="h">${f?left(c):c.h}</span></div>`:"";
- const emp=c.e?`<div class="sk">Empower: ${c.e.x}</div>`:"";
- return`<div class="${cls}" onclick="clk('${o.k}',${c.id})" title="${sk.map(s=>s+": "+(SK[s]||"")).join("\n")}"><b class="cost">${cost(c)}</b><div class="nm">${c.n}</div>
- <div class="sk">${c.t==="N"?sk.join(", "):c.t==="A"?"Anting-anting":"Orasyon"}</div>${c.t!=="N"?`<div class="sk">${c.x}</div>`:""}${emp}
- <div class="ps d${G.day?" on":""}">&#9728; ${pe(c.d)}</div><div class="ps n${G.day?"":" on"}">&#9790; ${pe(c.ni)}</div>${st}</div>`}
-function side(i){const p=G.P[i];const kc=`k${pend&&pend.ty==="any"&&i===0?" tgt":""}${sel&&i===1&&G.ph==="atk"&&targets(0,sel).k?" tgt":""}`;
- return`<div class="bar"><span class="${kc}" onclick="clk('k',${i})"><b>${nm(i)}</b> Katalonan HP ${Math.max(0,p.hp)}</span>
- <span>Kalasag ${'<i class="pip"></i>'.repeat(p.kal.length)||"none"}</span><span>Alay ${p.al}/${p.max}</span><span>Kamay ${p.hand.length}</span><span>Deck ${p.deck.length}</span></div>
- <div class="row">${p.f.map(c=>{let x="";if(i===0&&sel===c)x="sel";else if(i===0&&G.t===0&&G.ph==="atk"&&!pend&&canAtk(c))x="ok";
-  else if(pend&&((pend.ty==="foe"&&i===1)||(pend.ty!=="foe"&&i===0&&pend.ty!=="none")))x="tgt";else if(sel&&i===1&&G.ph==="atk"&&targets(0,sel).f.includes(c))x="tgt";else if(c.sick&&i===0)x="sick";
-  return card(c,{f:1,k:"f",cls:x})}).join("")||"<i>No Nilalang in play</i>"}</div>
- ${i===0?`<div class="row" style="margin-top:8px">${p.hand.map(c=>card(c,{k:"h",cls:c===(pend&&pend.c)?"sel":(cost(c)>p.al||G.ph!=="sum")?"cant":""})).join("")}</div>`:""}`}
-function render(){document.body.className=G.day?"day":"night";
- $("tm").innerHTML=`${G.day?"&#9728; ARAW (Day)":"&#9790; GABI (Night)"} - Round ${G.round} - flips in ${G.left} round${G.left>1?"s":""}<br><small>${G.day?"Only Sinag and Walang-Takot attack. Only Panangga defend.":PANANGGA_ONLY?"Everyone attacks. Only Panangga defend.":"Everyone attacks and defends."}</small><br>Yugto: ${["al","sum","atk"].map(k=>k===G.ph?"<b>"+PHN[k]+"</b>":PHN[k]).join(" &rsaquo; ")} - ${nm(G.t)}`;
- $("opp").innerHTML=side(1);$("me").innerHTML=side(0);
- $("hint").textContent=G.over?"":busy||G.t!==0?"Opponent is playing...":pend?"Choose a target (click the card again to cancel).":G.ph==="al"?`${PHN.al}: press Collect ${PHN.al} to draw a card and gain Alay.`:G.ph==="sum"?`${PHN.sum}: play your cards, then press Go to ${PHN.atk}.`:sel?"Click the opponent's Katalonan or a highlighted creature to attack.":`${PHN.atk}: click a glowing creature to attack, or End turn.`;
- $("end").disabled=busy||G.t!==0||G.over;$("ph").disabled=busy||G.t!==0||G.over||G.ph==="atk";$("ph").textContent=G.ph==="al"?"Collect "+PHN.al:"Go to "+PHN.atk;$("lg").innerHTML=G.log.map(s=>"<div>"+s+"</div>").join("")}
-if(typeof window!=="undefined"&&typeof process==="undefined")newGame();
+const BK='<img class="bk" alt="" src="assets/card-back.webp" onerror="this.className=\'pip\'">';
+const FAM={Lupa:"#8a6a3b",Gubat:"#3f7d3a",Dagat:"#2a5d9f",Langit:"#4c8fc0",Apoy:"#c4472b",Dilim:"#6a4f9a",Liwanag:"#d9b030",Kulam:"#8a3f9a"}; /* placeholder Pamilya: add fam:"Lupa" to a card to show its gem. None assigned in Set 01. */
+const FIL=true; /* true: show Atake/Buhay instead of ATK/HP */
+const fil=s=>FIL?String(s).replace(/\bATK\b/g,"Atake").replace(/\bHP\b/g,"Buhay"):String(s);
+function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>fil(typeof x==="string"?x:x.x),N=c.t==="N",on=G.day;
+ const sk=f?[...e.sk]:(c.s||[]);
+ const sp=(N?sk.join(" \u00b7 ").toUpperCase():c.t==="O"?"ORASYON":"ANTING-ANTING").replace(/-/g,"\u2011");
+ const ef=fil(N?sk.map(s=>SK[s]||"").join(" "):c.x);
+ const lw=Math.max(...sp.split(" ").map(w=>w.length)),one=Math.min(4.8,28/(sp.length*.78));
+ const nfs=Math.max(2.6,Math.min(5.4,41/(c.n.length*.77))),sfs=one>=3?one:Math.min(3.4,27/(lw*.78)),efs=ef.length>95?2.7:3.2;
+ let st="";if(N){if(f)st=c.sick&&!e.sk.has("Mabilis")?"Summoned: waits a turn":c.att?"Has attacked":canAtk(c)?"Ready to attack":G.day?"Waits for Night":"Cannot attack";else st=c.e?"Empower: "+fil(c.e.x):`Cost ${cost(c)} Alay`}
+ const gem=c.fam?`<em class="gm" style="background:${FAM[c.fam]}"></em>`:"";
+ return`<div class="fc ${N?"N":"X"} ${c.t} ${o.cls||""}" style="${c.fam?"--fam:"+FAM[c.fam]+";":""}${o.st||""}" onclick="clk('${o.k}',${c.id})" onmouseenter="zm(${c.id})" onmouseleave="zm(0)" ontouchstart="tz=setTimeout(()=>zm(${c.id}),400)" ontouchend="clearTimeout(tz)">
+${N?'<i class="x noart">ART</i>':'<img class="bg" alt="" src="assets/bg-o.webp">'}<img class="art" alt="" src="assets/art/${c.k}.webp" onerror="this.remove()"><img class="fr" alt="" src="assets/frame-${N?"n":"o"}.webp">
+<b class="x cost">${cost(c)}</b><b class="x nm" style="font-size:${nfs}cqw">${c.n}</b>
+<span class="x ty"><b>${gem}${N?"NILALANG":c.t==="O"?"ORASYON":"ANTING"}</b><i>${N?"Creature":c.t==="O"?"Spell":"Amulet"}</i></span>
+<b class="x sp" style="font-size:${sfs}cqw">${sp}</b><div class="x ef" style="font-size:${efs}cqw">${ef}</div>
+<span class="x ph dh">ARAW</span><div class="x pb db">${pe(c.d)}</div><span class="x ph nh">GABI</span><div class="x pb nb">${pe(c.ni)}</div>
+<i class="x pn pd ${on?"on":"off"}"></i><i class="x pn pg ${on?"off":"on"}"></i>
+${N?`<b class="x orb atk">${f?e.a:c.a}<small>${FIL?"ATAKE":"ATK"}</small></b><b class="x orb hpv">${f?left(c):c.h}<small>${FIL?"BUHAY":"HP"}</small></b><div class="x st">${st}</div>`:""}</div>`}
+function zm(id){const z=$("zm");if(!id){z.hidden=true;return}let c=null,fl=false;
+ for(const p of G.P){const a=p.f.find(x=>x.id===id);if(a){c=a;fl=true;break}}
+ if(!c)c=G.P[0].hand.find(x=>x.id===id);if(!c)return;z.innerHTML=card(c,{f:fl,k:"z"});z.hidden=false}
+function half(i){const p=G.P[i];
+ const tg=(pend&&pend.ty==="any"&&i===0)||(sel&&i===1&&G.ph==="atk"&&targets(0,sel).k);
+ const cs=p.f.map(c=>{let x="";
+  if(i===0&&sel===c)x="sel";else if(i===0&&G.t===0&&G.ph==="atk"&&!pend&&canAtk(c))x="ok";
+  else if(pend&&((pend.ty==="foe"&&i===1)||(pend.ty!=="foe"&&i===0&&pend.ty!=="none")))x="tgt";
+  else if(sel&&i===1&&G.ph==="atk"&&targets(0,sel).f.includes(c))x="tgt";else if(c.sick&&i===0)x="sick";
+  return card(c,{f:1,k:"f",cls:x})});
+ while(cs.length<6)cs.push('<div class="slot"></div>');
+ const hp=Math.max(0,p.hp);
+ return`<div class="dk"><img src="assets/card-back.webp" alt=""><b>Deck</b><span>${p.deck.length} cards</span></div>
+<div class="ip"><b>${nm(i)}</b> <i>Katalonan</i><span class="hv">&#10084; ${hp}</span><small>Kalasag: ${p.kal.length} &bull; Alay: ${p.al}/${p.max} &bull; Kamay: ${p.hand.length} &bull; Deck: ${p.deck.length}</small></div>
+<div class="zn"><b class="zt">NILALANG ZONE</b><div class="sl">${cs.join("")}</div></div>
+<div class="hpn${tg?" tgt":""}" onclick="clk('k',${i})"><b>KATALONAN</b><span class="hpt">${fil("HP")}: ${hp}</span><div class="ks">${BK.repeat(p.kal.length)||"<small>No Kalasag</small>"}</div></div>`}
+function fit(){if(typeof innerWidth==="undefined")return;const st=$("stage");if(!st||!st.style)return;const s=Math.min(innerWidth/1672,innerHeight/941);
+ st.style.transform=`scale(${s})`;st.style.left=(innerWidth-1672*s)/2+"px";st.style.top=(innerHeight-941*s)/2+"px"}
+function tg(){const l=$("lg");l.hidden=!l.hidden}
+function render(){fit();$("zm").hidden=true;document.body.className=G.day?"day":"night";
+ const p0=G.P[0],ph=["al","sum","atk"].map(k=>k===G.ph?"<b>"+PHN[k]+"</b>":PHN[k]).join(" &bull; ");
+ $("daypill").innerHTML=G.day?"&#9728; Day":"&#9790; Night";
+ $("info").innerHTML=`&#9733; ${G.day?"ARAW (Day)":"GABI (Night)"} &ndash; Round ${G.round} <small>(flips in ${G.left})</small><br><small>${nm(G.t)}: ${ph}</small>`;
+ $("s1").innerHTML=half(1);$("s0").innerHTML=half(0);
+ const hd=p0.hand,n=hd.length,ov=n>1?Math.max(0,(n*150-830)/(n-1)):0;
+ $("hand").innerHTML=hd.map((c,i)=>{const k=i-(n-1)/2;return card(c,{k:"h",cls:c===(pend&&pend.c)?"sel":(cost(c)>p0.al||G.ph!=="sum")?"cant":"",st:`--r:${(k*3).toFixed(1)}deg;--y:${(Math.abs(k)*7).toFixed(0)}px;margin-left:${i?-ov:0}px`})}).join("");
+ $("alay").innerHTML=`<svg viewBox="0 0 24 32"><path d="M12 0C12 8 3 12 3 22a9 9 0 0018 0c0-5-3-8-4-12-2 3-3 4-5 4 1-5 1-9 0-14z" fill="#f3a21d"/></svg>Alay<br><span>${p0.al}/${p0.max}</span>`;
+ $("hint").textContent=G.over?"":busy||G.t!==0?"Opponent is playing...":pend?"Choose a target (click the card again to cancel).":G.ph==="al"?`${PHN.al}: press Collect ${PHN.al} to draw a card and gain Alay.`:G.ph==="sum"?`${PHN.sum}: play your cards, then press Go to ${PHN.atk}.`:sel?"Click the opponent's Katalonan or a highlighted creature to attack.":`${PHN.atk}: click a glowing creature to attack, or End Turn.`;
+ $("rule").textContent=G.day?"Day: only Sinag and Walang-Takot attack. Only Panangga defend.":PANANGGA_ONLY?"Night: everyone attacks. Only Panangga defend.":"Night: everyone attacks and defends.";
+ $("end").disabled=busy||G.t!==0||G.over;$("ph").disabled=busy||G.t!==0||G.over||G.ph==="atk";$("ph").textContent=G.ph==="al"?"Collect "+PHN.al:"Go to "+PHN.atk;
+ $("lg").innerHTML=G.log.map(s=>"<div>"+s+"</div>").join("")}
+if(typeof window!=="undefined"&&typeof process==="undefined"){addEventListener("resize",fit);newGame()}
 </script></body></html>
