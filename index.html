@@ -68,6 +68,9 @@ body.night{background:url(assets/bg-night.webp) center/cover no-repeat,linear-gr
 .st{color:#f3e2bd;font-style:italic;font-size:2.5cqw;background:rgba(20,10,4,.55);border-radius:2cqw}
 .fc.ok{box-shadow:0 0 14px 4px #ffe27a}.fc.sel{outline:3px solid #fff}.fc.tgt{outline:3px solid #ff6a4d;animation:p 1s infinite}
 .fc.sick{filter:saturate(.55)}.fc.cant{filter:grayscale(.5) brightness(.65)}
+.tint{left:0;top:0;width:100%;height:100%;mix-blend-mode:color;pointer-events:none;-webkit-mask:url(assets/tint-n.webp) 0 0/100% 100% no-repeat;mask:url(assets/tint-n.webp) 0 0/100% 100% no-repeat}.fc.X .tint{-webkit-mask-image:url(assets/tint-o.webp);mask-image:url(assets/tint-o.webp)}
+.tint.lift{background:#fff;mix-blend-mode:screen;opacity:.5}
+.lh{left:21.6%;top:11.3%;height:3.1%;padding:0 1.8cqw;border-radius:99px;border:.3cqw solid #f3e2bd;font-size:2.7cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 .3cqw .8cqw #000a;white-space:nowrap}
 #zm{position:fixed;right:14px;top:76px;z-index:30;pointer-events:none}#zm[hidden]{display:none}#zm .fc{--cw:min(380px,40vw)}
 
 .fc .art,.fc .noart{left:7.99%;top:9.88%;width:84.21%;height:54.26%}.fc.X .art{left:7.05%;top:10.08%;width:85.81%;height:49.80%}
@@ -132,6 +135,8 @@ apoy:O("Orasyon ng Apoy",3,"3 damage to an enemy Nilalang.","apoy","3 damage.","
 umaga:O("Orasyon ng Umaga",3,"Make it Day. Timer resets.","umaga","If already Day, draw 1.","Makes it Day."),
 gabi:O("Orasyon ng Gabi",3,"Make it Night. Timer resets.","gabi","Makes it Night.","If already Night, draw 1."),
 wasak:O("Orasyon ng Pagwasak",5,"Destroy an enemy Nilalang.","wasak","Costs 6.","Costs 4.")};
+const LAHI_OF={Tikbalang:"Engkanto",Kapre:"Higante",Aswang:"Halimaw",Manananggal:"Halimaw",Tiyanak:"Halimaw",Duwende:"Lamang-Lupa","Nuno sa Punso":"Lamang-Lupa",Sigbin:"Hayop",Batibat:"Engkanto",Santelmo:"Espiritu",Sirena:"Dagat",Siyokoy:"Dagat",Bakunawa:"Dagat",Minokawa:"Hayop",Sarimanok:"Hayop",Tigmamanukan:"Hayop",Bungisngis:"Higante",Amalanhig:"Halimaw",Berberoka:"Higante",Pugot:"Espiritu",Engkantada:"Engkanto",Diwata:"Engkanto","Maria Makiling":"Engkanto",Mangkukulam:"Mahika",Mambabarang:"Mahika","Wak-wak":"Halimaw",Tiktik:"Halimaw",Ekek:"Halimaw",Dalaketnon:"Engkanto",Alan:"Halimaw",Sarangay:"Engkanto",Laho:"Halimaw",Tambanokano:"Dagat",Buwaya:"Hayop",Berbalang:"Halimaw",Multo:"Espiritu",Kumakatok:"Espiritu",Agta:"Higante",Anggitay:"Engkanto","Ibong Adarna":"Hayop"}; /* Lahi of all 40 Set 01 Nilalang, by card name */
+Object.values(CARDS).forEach(c=>{if(LAHI_OF[c.n])c.lahi=LAHI_OF[c.n]});
 const DECK=[...Object.keys(CARDS),"duwende","wakwak","tiktik","siyokoy","pugot","ekek","dalaketnon","kapre","tikbalang","sirena","apoy"];
 const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n),sl=ms=>new Promise(r=>setTimeout(r,ms*SPD));
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -252,8 +257,9 @@ async function clk(k,id){if(G.over||busy||G.t!==0)return;const p=G.P[0];
  if(k==="k"){if(pend&&pend.ty==="any"&&id===0){cast(0,pend.c,{kat:0});pend=null;return render()}
   if(id===1&&sel&&G.ph==="atk"){if(targets(0,sel).k)await doAttack(0,sel,null);else $("hint").textContent="Hamon: you must attack the Hamon creature."}}}
 const BK='<img class="bk" alt="" src="assets/card-back.webp" onerror="this.className=\'pip\'">';
-const FAM={Lupa:"#8a6a3b",Gubat:"#3f7d3a",Dagat:"#2a5d9f",Langit:"#4c8fc0",Apoy:"#c4472b",Dilim:"#6a4f9a",Liwanag:"#d9b030",Kulam:"#8a3f9a"}; /* placeholder Pamilya: add fam:"Lupa" to a card to show its gem. None assigned in Set 01. */
+const LAHI={"Lamang-Lupa":"#557747",Engkanto:"#C47A9B",Halimaw:"#A83D32",Espiritu:"#F2F2F2",Hayop:"#C49A42",Dagat:"#286C91",Higante:"#986044",Mahika:"#563D75"}; /* add lahi:"Higante" to a card to show its gem and name. None assigned in Set 01 yet. */
 const FIL=true; /* true: show Atake/Buhay instead of ATK/HP */
+const lm=h=>{const n=parseInt(h.slice(1),16);return((n>>16)*299+((n>>8)&255)*587+(n&255)*114)/1000},ink=h=>lm(h)>150?"#2a1608":"#fff";
 const fil=s=>FIL?String(s).replace(/\bATK\b/g,"Atake").replace(/\bHP\b/g,"Buhay"):String(s);
 function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>fil(typeof x==="string"?x:x.x),N=c.t==="N",on=G.day;
  const sk=f?[...e.sk]:(c.s||[]);
@@ -262,10 +268,10 @@ function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>fil(typeof x==="string"?
  const lw=Math.max(...sp.split(" ").map(w=>w.length)),one=Math.min(4.8,28/(sp.length*.78));
  const nfs=Math.max(2.6,Math.min(5.4,41/(c.n.length*.77))),sfs=one>=3?one:Math.min(3.4,27/(lw*.78)),efs=ef.length>95?2.7:3.2;
  let st="";if(N){if(f)st=c.sick&&!e.sk.has("Mabilis")?"Summoned: waits a turn":c.att?"Has attacked":canAtk(c)?"Ready to attack":G.day?"Waits for Night":"Cannot attack";else st=c.e?"Empower: "+fil(c.e.x):`Cost ${cost(c)} Alay`}
- const gem=c.fam?`<em class="gm" style="background:${FAM[c.fam]}"></em>`:"";
- return`<div class="fc ${N?"N":"X"} ${c.t} ${o.cls||""}" style="${c.fam?"--fam:"+FAM[c.fam]+";":""}${o.st||""}" onclick="clk('${o.k}',${c.id})" onmouseenter="zm(${c.id})" onmouseleave="zm(0)" ontouchstart="tz=setTimeout(()=>zm(${c.id}),400)" ontouchend="clearTimeout(tz)">
-${N?'<i class="x noart">ART</i>':'<img class="bg" alt="" src="assets/bg-o.webp">'}<img class="art" alt="" src="assets/art/${c.k}.webp" onerror="this.remove()"><img class="fr" alt="" src="assets/frame-${N?"n":"o"}.webp">
-<b class="x cost">${cost(c)}</b><b class="x nm" style="font-size:${nfs}cqw">${c.n}</b>
+ const lc=LAHI[c.lahi],lh=lc?`<span class="x lh" style="background:${lc};color:${ink(lc)}">${c.lahi}</span>`:"",gem=lc?`<em class="gm" style="background:${lc}"></em>`:"";
+ return`<div class="fc ${N?"N":"X"} ${c.t} ${o.cls||""}" style="${lc?"--lahi:"+lc+";":""}${o.st||""}" onclick="clk('${o.k}',${c.id})" onmouseenter="zm(${c.id})" onmouseleave="zm(0)" ontouchstart="tz=setTimeout(()=>zm(${c.id}),400)" ontouchend="clearTimeout(tz)">
+${N?'<i class="x noart">ART</i>':'<img class="bg" alt="" src="assets/bg-o.webp">'}<img class="art" alt="" src="assets/art/${c.k}.webp" onerror="this.remove()"><img class="fr" alt="" src="assets/frame-${N?"n":"o"}.webp">${lc?`<i class="x tint" style="background:${lc}"></i>${lm(lc)>215?`<i class="x tint lift"></i>`:""}`:""}
+${lh}<b class="x cost">${cost(c)}</b><b class="x nm" style="font-size:${nfs}cqw">${c.n}</b>
 <span class="x ty"><b>${gem}${N?"NILALANG":c.t==="O"?"ORASYON":"ANTING"}</b><i>${N?"Creature":c.t==="O"?"Spell":"Amulet"}</i></span>
 <b class="x sp" style="font-size:${sfs}cqw">${sp}</b><div class="x ef" style="font-size:${efs}cqw">${ef}</div>
 <span class="x ph dh">ARAW</span><div class="x pb db">${pe(c.d)}</div><span class="x ph nh">GABI</span><div class="x pb nb">${pe(c.ni)}</div>
