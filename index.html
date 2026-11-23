@@ -107,6 +107,8 @@ const O=(n,c,x,fx,d,ni)=>({t:"O",n,c,x,fx,d,ni});
 const CARDS={
 tikbalang:N("Tikbalang",4,4,3,["Mabilis"],{s:["Tibay"],x:"Trickster. Gains Tibay."},{a:2,s:["Lipad"],x:"+2 ATK. Gains Lipad."}),
 kapre:N("Kapre",4,3,4,["Panangga","Tibay"],hp1,up(2)),
+aswang:N("Aswang",5,4,4, ["Mabilis"],NO,up(3)),
+manananggal:N("Manananggal",4,3,3, ["Lipad"],{ph:2,x:"Song. Paghilom 2."},up(2),{x:"Hati-katawan"}),
 duwende:N("Duwende",1,1,2,["Panangga"],{s:["Tibay"],x:"Hides. Gains Tibay."},up(1)),
 siyokoy:N("Siyokoy",3,3,3,["Mabilis"],hp1,up(2)),
 pugot:N("Pugot",3,3,2,["Mabilis"],hp1,up(2)),
@@ -135,7 +137,7 @@ apoy:O("Orasyon ng Apoy",3,"3 damage to an enemy Nilalang.","apoy","3 damage.","
 umaga:O("Orasyon ng Umaga",3,"Make it Day. Timer resets.","umaga","If already Day, draw 1.","Makes it Day."),
 gabi:O("Orasyon ng Gabi",3,"Make it Night. Timer resets.","gabi","Makes it Night.","If already Night, draw 1."),
 wasak:O("Orasyon ng Pagwasak",5,"Destroy an enemy Nilalang.","wasak","Costs 6.","Costs 4.")};
-const LAHI_OF={Tikbalang:"Engkanto",Kapre:"Higante",Aswang:"Halimaw",Manananggal:"Halimaw",Tiyanak:"Halimaw",Duwende:"Lamang-Lupa","Nuno sa Punso":"Lamang-Lupa",Sigbin:"Hayop",Batibat:"Engkanto",Santelmo:"Espiritu",Sirena:"Dagat",Siyokoy:"Dagat",Bakunawa:"Dagat",Minokawa:"Hayop",Sarimanok:"Hayop",Tigmamanukan:"Hayop",Bungisngis:"Higante",Amalanhig:"Halimaw",Berberoka:"Higante",Pugot:"Espiritu",Engkantada:"Engkanto",Diwata:"Engkanto","Maria Makiling":"Engkanto",Mangkukulam:"Mahika",Mambabarang:"Mahika","Wak-wak":"Halimaw",Tiktik:"Halimaw",Ekek:"Halimaw",Dalaketnon:"Engkanto",Alan:"Halimaw",Sarangay:"Engkanto",Laho:"Halimaw",Tambanokano:"Dagat",Buwaya:"Hayop",Berbalang:"Halimaw",Multo:"Espiritu",Kumakatok:"Espiritu",Agta:"Higante",Anggitay:"Engkanto","Ibong Adarna":"Hayop"}; /* Lahi of all 40 Set 01 Nilalang, by card name */
+const LAHI_OF={Tikbalang:"Engkanto",Kapre:"Higante",Aswang:"Halimaw",Manananggal:"Halimaw",Tiyanak:"Halimaw",Duwende:"Lamang-Lupa","Nuno sa Punso":"Lamang-Lupa",Sigbin:"Hayop",Batibat:"Engkanto",Santelmo:"Espiritu",Sirena:"Dagat",Siyokoy:"Dagat",Bakunawa:"Dagat",Minokawa:"Hayop",Sarimanok:"Hayop",Tigmamanukan:"Hayop",Bungisngis:"Higante",Amalanhig:"Halimaw",Berberoka:"Higante",Pugot:"Higante",Engkantada:"Engkanto",Diwata:"Engkanto","Maria Makiling":"Engkanto",Mangkukulam:"Mahika",Mambabarang:"Mahika","Wak-wak":"Halimaw",Tiktik:"Halimaw",Ekek:"Halimaw",Dalaketnon:"Engkanto",Alan:"Halimaw",Sarangay:"Engkanto",Laho:"Halimaw",Tambanokano:"Dagat",Buwaya:"Hayop",Berbalang:"Halimaw",Multo:"Espiritu",Kumakatok:"Espiritu",Agta:"Higante",Anggitay:"Engkanto","Ibong Adarna":"Hayop"}; /* Lahi of all 40 Set 01 Nilalang, by card name */
 Object.values(CARDS).forEach(c=>{if(LAHI_OF[c.n])c.lahi=LAHI_OF[c.n]});
 const DECK=[...Object.keys(CARDS),"duwende","wakwak","tiktik","siyokoy","pugot","ekek","dalaketnon","kapre","tikbalang","sirena","apoy"];
 const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n),sl=ms=>new Promise(r=>setTimeout(r,ms*SPD));
