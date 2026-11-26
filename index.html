@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Alamat TCG - Set 01 Prototype</title>
 <style>
 *{box-sizing:border-box}
@@ -71,6 +71,41 @@ body.night{background:url(assets/bg-night.webp) center/cover no-repeat,linear-gr
 .tint{left:0;top:0;width:100%;height:100%;mix-blend-mode:color;pointer-events:none;-webkit-mask:url(assets/tint-n.webp) 0 0/100% 100% no-repeat;mask:url(assets/tint-n.webp) 0 0/100% 100% no-repeat}.fc.X .tint{-webkit-mask-image:url(assets/tint-o.webp);mask-image:url(assets/tint-o.webp)}
 .tint.lift{background:#fff;mix-blend-mode:screen;opacity:.5}
 .lh{left:21.6%;top:11.3%;height:3.1%;padding:0 1.8cqw;border-radius:99px;border:.3cqw solid #f3e2bd;font-size:2.7cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;box-shadow:0 .3cqw .8cqw #000a;white-space:nowrap}
+#bar{display:contents}
+.fc{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#zm[hidden]{display:none!important}
+#zm.tc{inset:0;right:auto;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000b;pointer-events:auto}
+#zm.tc .fc{--cw:min(86vw,440px)}
+body[data-m=p] #stage{display:flex;flex-direction:column}
+body[data-m=p] #top{position:relative;width:auto;height:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;background:#000b}
+body[data-m=p] .logo{position:static;font-size:38px}body[data-m=p] .logo small{font-size:15px;letter-spacing:6px}
+body[data-m=p] .set{display:none}
+body[data-m=p] #daypill{position:static;width:190px;height:52px;font-size:26px;margin-left:auto}
+body[data-m=p] #gear{position:static;width:52px;height:52px;font-size:26px}
+body[data-m=p] #info{position:static;order:9;width:100%;text-align:center;font-size:21px}body[data-m=p] #info small{font-size:19px}
+body[data-m=p] .sd{position:relative;width:auto;height:auto;pointer-events:auto;display:grid;grid-template-columns:130px 1fr 200px;grid-template-areas:"dk ip hpn" "zn zn zn";gap:8px;padding:8px 8px 0}
+body[data-m=p] #s0{grid-template-areas:"zn zn zn" "dk ip hpn"}
+body[data-m=p] #s0 .dk,body[data-m=p] #s1 .dk{grid-area:dk;position:static;left:auto;top:auto;width:auto;height:auto;padding:6px}
+body[data-m=p] #s0 .ip,body[data-m=p] #s1 .ip{grid-area:ip;position:static;left:auto;top:auto;width:auto;height:auto;padding:8px 12px;font-size:30px}
+body[data-m=p] #s0 .hpn,body[data-m=p] #s1 .hpn{grid-area:hpn;position:static;left:auto;top:auto;width:auto;height:auto;padding:6px 4px}
+body[data-m=p] #s0 .zn,body[data-m=p] #s1 .zn{grid-area:zn;position:relative;left:auto;top:auto;width:auto;height:auto;padding:34px 8px 10px;margin-top:8px}
+body[data-m=p] .dk img{width:70px;height:98px}body[data-m=p] .dk b{font-size:20px}body[data-m=p] .dk span{font-size:17px}
+body[data-m=p] .ip small{font-size:19px}body[data-m=p] .ip i{font-size:22px}
+body[data-m=p] .hpn b{font-size:22px}body[data-m=p] .hpt{font-size:38px;white-space:nowrap}body[data-m=p] .bk{width:28px;height:40px}
+body[data-m=p] .zt{font-size:20px;top:-14px;padding:2px 24px}
+body[data-m=p] .sl{position:static;display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+body[data-m=p] .slot{width:auto;height:auto;aspect-ratio:1064/1478}
+body[data-m=p] .sl .fc{--cw:100%}
+body[data-m=p] #mid{position:relative;left:auto;top:auto;width:auto;height:auto;margin:8px 0;padding:6px 14px}
+body[data-m=p] #mid b{font-size:24px;letter-spacing:2px}body[data-m=p] #hint{font-size:22px}body[data-m=p] #rule{font-size:18px}
+body[data-m=p] #hand{position:relative;left:auto;top:auto;width:auto;height:auto;flex:1 1 0;min-height:140px;display:flex;justify-content:flex-start;gap:10px;overflow-x:auto;overflow-y:hidden;padding:10px 14px}
+body[data-m=p] #hand .fc{--cw:190px;transform:none!important;margin-left:0!important}
+body[data-m=p] #bar{display:flex;gap:10px;padding:8px 14px 14px}
+body[data-m=p] #alay{position:static;width:190px;height:96px;font-size:20px;padding-top:6px}
+body[data-m=p] #alay span{font-size:40px}body[data-m=p] #alay svg{width:28px;height:38px}
+body[data-m=p] #btns{position:static;flex:1;width:auto;display:flex;gap:10px}
+body[data-m=p] #btns button{margin:0;flex:1;width:auto;height:96px;font-size:28px;line-height:1.1}
+body[data-m=p] #lg{left:12px;top:120px;width:696px;height:420px;font-size:20px}
 #zm{position:fixed;right:14px;top:76px;z-index:30;pointer-events:none}#zm[hidden]{display:none}#zm .fc{--cw:min(380px,40vw)}
 
 .fc .art,.fc .noart{left:7.99%;top:9.88%;width:84.21%;height:54.26%}.fc.X .art{left:7.05%;top:10.08%;width:85.81%;height:49.80%}
@@ -89,8 +124,8 @@ body.night{background:url(assets/bg-night.webp) center/cover no-repeat,linear-gr
 <div id="stage">
 <div id="top"><div class="logo">ALAMAT<small>TCG</small></div><div class="set">Set 01 Prototype</div><div id="daypill"></div><div id="info"></div><button id="gear" onclick="tg()" title="Game log">&#9881;</button></div>
 <div id="s1" class="sd"></div><div id="mid"><b>BATTLEFIELD</b><div id="hint"></div><div id="rule"></div></div><div id="s0" class="sd"></div>
-<div id="hand"></div><div id="alay"></div>
-<div id="btns"><button id="ph" onclick="clk('p')">Go to Atake</button><button id="end" onclick="clk('e')">End Turn</button></div>
+<div id="hand"></div>
+<div id="bar"><div id="alay"></div><div id="btns"><button id="ph" onclick="clk('p')">Go to Atake</button><button id="end" onclick="clk('e')">End Turn</button></div></div>
 <div id="lg" hidden></div>
 </div>
 <div id="zm" hidden></div>
@@ -125,7 +160,7 @@ bungisngis:N("Bungisngis",3,2,3,["Walang-Takot"],NO,NO,{e:{k:"hp",a:3,h:0,x:"los
 amalanhig:N("Amalanhig",4,3,4,["Tibay"],hp1,up(2)),
 berberoka:N("Berberoka",5,4,5,["Hamon"],hp1,NO),
 pugot:N("Pugot",3,3,2,["Mabilis"],hp1,up(2)),
-engkantada:N("Engkantada",4,2,4,["Sinag","Paghilom"],up(2),up(1)),
+engkantada:N("Engkantada",4,2,4,["Sinag","Paghilom"],up(2),up(1),{ph:1}),
 diwata:N("Diwata",5,3,5,["Sinag","Paghilom"],{a:1,ph:2,x:"Blessing. +1 ATK. Paghilom 2."},{a:-2,x:"-2 ATK."},{ph:1}),
 maria:N("Maria Makiling",5,2,6,["Panangga","Paghilom"],{ph:2,x:"Mountain guardian. Paghilom 2."},up(2),{ph:1}),
 mangkukulam:N("Mangkukulam",5,2,6,["Hamon"],{ph:2,x:"Song. Paghilom 2."},NO),
@@ -144,7 +179,7 @@ multo:N("Multo",3,2,3,["Lipad"],hp1,up(2)),
 kumakatok:N("Kumakatok",3,2,3,["Hamon"],hp1,up(2)),
 agta:N("Agta",2,1,3,["Hamon"],NO,up(1)),
 anggitay:N("Anggitay",4,2,3,["Sinag","Mabilis"],{a:2,x:"Gallop. +2 ATK."},{a:-2,x:"-2 ATK."}),
-adarna:N("Ibong Adarna",6,3,5,["Sinag","Paghilom"],NO,NO),
+adarna:N("Ibong Adarna",6,3,5,["Sinag","Paghilom"],NO,NO,{ph:1}),
 alakas:{t:"A",n:"Anting-anting ng Lakas",c:2,x:"Equipped +2 ATK.",q:{a:2,h:0,d:{h:1},n:{a:1}},d:"+1 HP.",ni:"+1 ATK."},
 abuhay:{t:"A",n:"Anting-anting ng Buhay",c:2,x:"Equipped +3 HP.",q:{a:0,h:3,d:{ph:1},n:{h:1}},d:"Paghilom 1.",ni:"+1 HP."},
 lakas:O("Orasyon ng Lakas",2,"Friendly Nilalang +2 ATK this turn.","lakas","Also +1 HP this turn.","+3 ATK instead."),
@@ -160,8 +195,10 @@ const $=id=>document.getElementById(id),rnd=n=>Math.floor(Math.random()*n),sl=ms
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
 const MAXAL=10; /* highest Alay a player can reach */
 const PHN={al:"Alay",sum:"Mantala at Pagtawag",atk:"Atake"}; /* phase names: rename here */
+const HV=typeof matchMedia!=="undefined"&&matchMedia("(hover:hover)").matches;
+const DECK_SIZE=40; /* each player gets a random 40 from the DECK pool */
 const KAL=5; /* Kalasag per player: tune here */
-let tz,G,sel=null,pend=null,busy=false,uid=0,SPD=1,HUMAN=[true,false],resolver=null;
+let lp=0,zt=0,tz,G,sel=null,pend=null,busy=false,uid=0,SPD=1,HUMAN=[true,false],resolver=null;
 const mk=k=>({...CARDS[k],k,id:++uid,dm:0,tmp:0,th:0,eq:[],sick:true,att:false});
 const nm=i=>i?"Opponent":"You",log=s=>{G.log.unshift(s);G.log.length=Math.min(G.log.length,40)};
 const pers=c=>G.day?c.d:c.ni;
@@ -171,7 +208,7 @@ function eff(c){const p=pers(c)||{};let a=c.a+(p.a||0)+c.tmp,h=c.h+(p.h||0)+c.th
 const left=c=>eff(c).h-c.dm,cost=c=>c.fx==="wasak"?(G.day?6:4):c.c;
 function newGame(){uid=0;sel=pend=null;busy=false;G={t:0,first:0,round:1,day:true,ph:"al",left:2,over:false,log:[],
  P:[0,1].map(()=>({hp:20,kal:[],hand:[],deck:[],f:[],max:0,al:0,dis:[]}))};
- for(const p of G.P){p.deck=shuffle(DECK.map(mk));p.kal=p.deck.splice(0,KAL);p.hand=p.deck.splice(0,5)}
+ for(const p of G.P){p.deck=shuffle(DECK.map(mk)).slice(0,DECK_SIZE);p.kal=p.deck.splice(0,KAL);p.hand=p.deck.splice(0,5)}
  G.first=G.t=rnd(2);
  log(`Coin toss: ${G.first?"the opponent goes":"you go"} first. Each turn: ${PHN.al}, then ${PHN.sum}, then ${PHN.atk}. Max 6 Nilalang in play.`);
  render();
@@ -260,7 +297,7 @@ function aiPlay(i,c){const p=G.P[i],o=G.P[1-i];const best=p.f.slice().sort((a,b)
  if(f==="umaga")return!G.day&&p.f.some(dayers)&&!o.f.some(x=>!dayers(x))?cast(i,c,null):false;
  return false}
 function find(id){for(const i of[0,1]){const c=G.P[i].f.find(x=>x.id===id);if(c)return{c,i}}}
-async function clk(k,id){if(G.over||busy||G.t!==0)return;const p=G.P[0];
+async function clk(k,id){if(lp){lp=0;return}if(G.over||busy||G.t!==0)return;const p=G.P[0];
  if(k==="e"){sel=pend=null;return endTurn(0)}
  if(k==="p"){sel=pend=null;if(G.ph==="al"){collect(0);render()}else if(G.ph==="sum"){G.ph="atk";log(`You enter ${PHN.atk}.`);render()}return}
  if(k==="h"){if(G.ph!=="sum"){$("hint").textContent=`Cards are played in ${PHN.sum}.`;return}const c=p.hand.find(x=>x.id===id);if(pend&&pend.c===c){pend=null;return render()}
@@ -287,7 +324,7 @@ function card(c,o={}){const f=o.f,e=f?eff(c):null,pe=x=>fil(typeof x==="string"?
  const nfs=Math.max(2.6,Math.min(5.4,41/(c.n.length*.77))),sfs=one>=3?one:Math.min(3.4,27/(lw*.78)),efs=ef.length>95?2.7:3.2;
  let st="";if(N){if(f)st=c.sick&&!e.sk.has("Mabilis")?"Summoned: waits a turn":c.att?"Has attacked":canAtk(c)?"Ready to attack":G.day?"Waits for Night":"Cannot attack";else st=c.e?"Empower: "+fil(c.e.x):`Cost ${cost(c)} Alay`}
  const lc=LAHI[c.lahi],lh=lc?`<span class="x lh" style="background:${lc};color:${ink(lc)}">${c.lahi}</span>`:"",gem=lc?`<em class="gm" style="background:${lc}"></em>`:"";
- return`<div class="fc ${N?"N":"X"} ${c.t} ${o.cls||""}" style="${lc?"--lahi:"+lc+";":""}${o.st||""}" onclick="clk('${o.k}',${c.id})" onmouseenter="zm(${c.id})" onmouseleave="zm(0)" ontouchstart="tz=setTimeout(()=>zm(${c.id}),400)" ontouchend="clearTimeout(tz)">
+ return`<div class="fc ${N?"N":"X"} ${c.t} ${o.cls||""}" style="${lc?"--lahi:"+lc+";":""}${o.st||""}" onclick="clk('${o.k}',${c.id})" oncontextmenu="return false" onmouseenter="HV&&zm(${c.id})" onmouseleave="HV&&zm(0)" ontouchstart="lp=0;clearTimeout(tz);tz=setTimeout(()=>{lp=1;zm(${c.id})},450)" ontouchend="clearTimeout(tz)" ontouchmove="clearTimeout(tz)">
 ${N?'<i class="x noart">ART</i>':'<img class="bg" alt="" src="assets/bg-o.webp">'}<img class="art" alt="" src="assets/art/${c.k}.webp" onerror="this.remove()"><img class="fr" alt="" src="assets/frame-${N?"n":"o"}.webp">${lc?`<i class="x tint" style="background:${lc}"></i>${lm(lc)>215?`<i class="x tint lift"></i>`:""}`:""}
 ${lh}<b class="x cost">${cost(c)}</b><b class="x nm" style="font-size:${nfs}cqw">${c.n}</b>
 <span class="x ty"><b>${gem}${N?"NILALANG":c.t==="O"?"ORASYON":"ANTING"}</b><i>${N?"Creature":c.t==="O"?"Spell":"Amulet"}</i></span>
@@ -295,9 +332,9 @@ ${lh}<b class="x cost">${cost(c)}</b><b class="x nm" style="font-size:${nfs}cqw"
 <span class="x ph dh">ARAW</span><div class="x pb db">${pe(c.d)}</div><span class="x ph nh">GABI</span><div class="x pb nb">${pe(c.ni)}</div>
 <i class="x pn pd ${on?"on":"off"}"></i><i class="x pn pg ${on?"off":"on"}"></i>
 ${N?`<b class="x orb atk">${f?e.a:c.a}<small>${FIL?"ATAKE":"ATK"}</small></b><b class="x orb hpv">${f?left(c):c.h}<small>${FIL?"BUHAY":"HP"}</small></b><div class="x st">${st}</div>`:""}</div>`}
-function zm(id){const z=$("zm");if(!id){z.hidden=true;return}let c=null,fl=false;
+function zm(id){const z=$("zm");if(!id){z.hidden=true;lp=0;return}let c=null,fl=false;
  for(const p of G.P){const a=p.f.find(x=>x.id===id);if(a){c=a;fl=true;break}}
- if(!c)c=G.P[0].hand.find(x=>x.id===id);if(!c)return;z.innerHTML=card(c,{f:fl,k:"z"});z.hidden=false}
+ if(!c)c=G.P[0].hand.find(x=>x.id===id);if(!c)return;z.className=HV?"hv":"tc";z.onclick=HV?null:()=>{if(Date.now()-zt>500)zm(0)};zt=Date.now();z.innerHTML=card(c,{f:fl,k:"z"});z.hidden=false}
 function half(i){const p=G.P[i];
  const tg=(pend&&pend.ty==="any"&&i===0)||(sel&&i===1&&G.ph==="atk"&&targets(0,sel).k);
  const cs=p.f.map(c=>{let x="";
@@ -311,8 +348,10 @@ function half(i){const p=G.P[i];
 <div class="ip"><b>${nm(i)}</b> <i>Katalonan</i><span class="hv">&#10084; ${hp}</span><small>Kalasag: ${p.kal.length} &bull; Alay: ${p.al}/${p.max} &bull; Kamay: ${p.hand.length} &bull; Deck: ${p.deck.length}</small></div>
 <div class="zn"><b class="zt">NILALANG ZONE</b><div class="sl">${cs.join("")}</div></div>
 <div class="hpn${tg?" tgt":""}" onclick="clk('k',${i})"><b>KATALONAN</b><span class="hpt">${fil("HP")}: ${hp}</span><div class="ks">${BK.repeat(p.kal.length)||"<small>No Kalasag</small>"}</div></div>`}
-function fit(){if(typeof innerWidth==="undefined")return;const st=$("stage");if(!st||!st.style)return;const s=Math.min(innerWidth/1672,innerHeight/941);
- st.style.transform=`scale(${s})`;st.style.left=(innerWidth-1672*s)/2+"px";st.style.top=(innerHeight-941*s)/2+"px"}
+function fit(){if(typeof innerWidth==="undefined")return;const st=$("stage");if(!st||!st.style)return;
+ const pt=innerHeight>innerWidth*1.1;document.body.dataset.m=pt?"p":"l";
+ if(pt){const s=innerWidth/720;st.style.cssText=`width:720px;height:${innerHeight/s}px;transform:scale(${s});left:0;top:0`}
+ else{const s=Math.min(innerWidth/1672,innerHeight/941);st.style.cssText=`width:1672px;height:941px;transform:scale(${s});left:${(innerWidth-1672*s)/2}px;top:${(innerHeight-941*s)/2}px`}}
 function tg(){const l=$("lg");l.hidden=!l.hidden}
 function render(){fit();$("zm").hidden=true;document.body.className=G.day?"day":"night";
  const p0=G.P[0],ph=["al","sum","atk"].map(k=>k===G.ph?"<b>"+PHN[k]+"</b>":PHN[k]).join(" &bull; ");
@@ -322,8 +361,8 @@ function render(){fit();$("zm").hidden=true;document.body.className=G.day?"day":
  const hd=p0.hand,n=hd.length,ov=n>1?Math.max(0,(n*150-830)/(n-1)):0;
  $("hand").innerHTML=hd.map((c,i)=>{const k=i-(n-1)/2;return card(c,{k:"h",cls:c===(pend&&pend.c)?"sel":(cost(c)>p0.al||G.ph!=="sum")?"cant":"",st:`--r:${(k*3).toFixed(1)}deg;--y:${(Math.abs(k)*7).toFixed(0)}px;margin-left:${i?-ov:0}px`})}).join("");
  $("alay").innerHTML=`<svg viewBox="0 0 24 32"><path d="M12 0C12 8 3 12 3 22a9 9 0 0018 0c0-5-3-8-4-12-2 3-3 4-5 4 1-5 1-9 0-14z" fill="#f3a21d"/></svg>Alay<br><span>${p0.al}/${p0.max}</span>`;
- $("hint").textContent=G.over?"":busy||G.t!==0?"Opponent is playing...":pend?"Choose a target (click the card again to cancel).":G.ph==="al"?`${PHN.al}: press Collect ${PHN.al} to draw a card and gain Alay.`:G.ph==="sum"?`${PHN.sum}: play your cards, then press Go to ${PHN.atk}.`:sel?"Click the opponent's Katalonan or a highlighted creature to attack.":`${PHN.atk}: click a glowing creature to attack, or End Turn.`;
- $("rule").textContent=G.day?"Day: only Sinag and Walang-Takot attack. Only Panangga defend.":PANANGGA_ONLY?"Night: everyone attacks. Only Panangga defend.":"Night: everyone attacks and defends.";
+ $("hint").textContent=(G.over?"":busy||G.t!==0?"Opponent is playing...":pend?"Choose a target (click the card again to cancel).":G.ph==="al"?`${PHN.al}: press Collect ${PHN.al} to draw a card and gain Alay.`:G.ph==="sum"?`${PHN.sum}: play your cards, then press Go to ${PHN.atk}.`:sel?"Click the opponent's Katalonan or a highlighted creature to attack.":`${PHN.atk}: click a glowing creature to attack, or End Turn.`).replace(/click/g,HV?"click":"tap").replace(/Click/g,HV?"Click":"Tap");
+ $("rule").textContent=(G.day?"Day: only Sinag and Walang-Takot attack. Only Panangga defend.":PANANGGA_ONLY?"Night: everyone attacks. Only Panangga defend.":"Night: everyone attacks and defends.")+(HV?"":" Press and hold a card to zoom.");
  $("end").disabled=busy||G.t!==0||G.over;$("ph").disabled=busy||G.t!==0||G.over||G.ph==="atk";$("ph").textContent=G.ph==="al"?"Collect "+PHN.al:"Go to "+PHN.atk;
  $("lg").innerHTML=G.log.map(s=>"<div>"+s+"</div>").join("")}
 if(typeof window!=="undefined"&&typeof process==="undefined"){addEventListener("resize",fit);newGame()}
